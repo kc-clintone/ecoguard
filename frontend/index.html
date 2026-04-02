@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EcoGuard</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<header>EcoGuard 🌱</header>
+
+<!-- LANDING -->
+<div class="container" id="landing">
+  <div class="card landing-card">
+    <h1>Welcome to EcoGuard 🌱</h1>
+    <p class="description">
+      EcoGuard is your smart farming companion. Get real-time climate alerts, monitor your crops with AI detection, 
+      plan your farm with our interactive calendar, and make data-driven decisions to protect your harvest.
+    </p>
+    <div class="landing-buttons">
+      <button onclick="showSection('login')">Login</button>
+      <button onclick="showSection('signup')">Sign Up</button>
+      <button onclick="continueAsGuest()">Continue as Guest</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div class="container hidden" id="login">
+  <div class="card">
+    <h3>Login</h3>
+    <input type="text" id="loginUser" placeholder="Username">
+    <input type="password" id="loginPass" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p>No account?</p>
+    <button onclick="showSection('signup')">Sign Up</button>
+    <button onclick="showSection('landing')">Back</button>
+  </div>
+</div>
+
+<!-- SIGNUP -->
+<div class="container hidden" id="signup">
+  <div class="card">
+    <h3>Sign Up</h3>
+    <input type="text" id="signupUser" placeholder="Username">
+    <input type="password" id="signupPass" placeholder="Password">
+    <button onclick="signup()">Create Account</button>
+    <button onclick="showSection('landing')">Back</button>
+  </div>
+</div>
+
+<!-- HOME -->
+<div class="container hidden" id="home">
+  <div class="card">
+    <h3>Welcome Farmer</h3>
+    <button onclick="showSection('alerts')">Climate Alerts</button>
+    <button onclick="showSection('detector')">AI Crop Detector</button>
+    <button onclick="showSection('calendar')">Farming Calendar</button>
+    <button onclick="showSection('about')">About EcoGuard</button>
+    <button onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<!-- ALERTS -->
+<div class="container hidden" id="alerts">
+  <div class="card">
+    <h3>⚠ Climate Alerts</h3>
+    <p id="alerts-content">Loading alerts...</p>
+    <button onclick="goHome()">Back</button>
+  </div>
+</div>
+
+<!-- CALENDAR -->
+<div class="container hidden" id="calendar">
+  <div class="card">
+    <h3>📅 Farming Calendar</h3>
+    <p id="calendar-content">Loading calendar...</p>
+    <button onclick="goHome()">Back</button>
+  </div>
+</div>
+
+<!-- DETECTOR -->
+<div class="container hidden" id="detector">
+  <div class="card">
+    <h3>AI Crop Detector</h3>
+    <input type="file" accept="image/*" onchange="previewImage(event)">
+    <img id="preview" class="hidden">
+    <p id="result">Upload image</p>
+    <button onclick="goHome()">Back</button>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="container hidden" id="about">
+  <div class="card">
+    <h3>About EcoGuard</h3>
+    <p>
+      EcoGuard helps farmers prepare for climate changes with alerts,
+      crop monitoring, and smart farming guidance.
+    </p>
+    <button onclick="goHome()">Back</button>
+  </div>
+</div>
+
+<script src="/static/script.js"></script>
+</body>
+</html>
