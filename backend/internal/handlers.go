@@ -13,19 +13,17 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	usersLock.Lock()
-	defer usersLock.Unlock()
-
-	// Check if user already exists
-	for _, u := range Users {
-		if u.Username == newUser.Username {
-			http.Error(w, "Username already exists", http.StatusConflict)
-			return
-		}
+	exists, err := UserExists(newUser.Username)
+	if err != nil {
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
+	if exists {
+		http.Error(w, "Username already exists", http.StatusConflict)
+		return
 	}
 
-	Users = append(Users, newUser)
-	if err := SaveUsers(); err != nil {
+	if err := InsertUser(newUser); err != nil {
 		http.Error(w, "Failed to save user", http.StatusInternalServerError)
 		return
 	}
@@ -41,17 +39,18 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	usersLock.Lock()
-	defer usersLock.Unlock()
-
-	for _, u := range Users {
-		if u.Username == req.Username && u.Password == req.Password {
-			json.NewEncoder(w).Encode(u)
-			return
-		}
+	user, err := GetUser(req.Username)
+	if err != nil {
+		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+		return
 	}
 
-	http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+	if user.Password != req.Password {
+		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+		return
+	}
+
+	json.NewEncoder(w).Encode(user)
 }
 
 // UpdateUserHandler updates user data
@@ -62,20 +61,10 @@ func UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	usersLock.Lock()
-	defer usersLock.Unlock()
-
-	for i, u := range Users {
-		if u.Username == updated.Username {
-			Users[i] = updated
-			if err := SaveUsers(); err != nil {
-				http.Error(w, "Failed to save user", http.StatusInternalServerError)
-				return
-			}
-			json.NewEncoder(w).Encode(map[string]string{"message": "User updated"})
-			return
-		}
+	if err := UpdateUser(updated); err != nil {
+		http.Error(w, "Failed to update user", http.StatusInternalServerError)
+		return
 	}
 
-	http.Error(w, "User not found", http.StatusNotFound)
+	json.NewEncoder(w).Encode(map[string]string{"message": "User updated"})
 }
