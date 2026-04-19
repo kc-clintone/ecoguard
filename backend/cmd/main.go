@@ -8,9 +8,9 @@ import (
 )
 
 func main() {
-	// Load users from file
-	if err := internal.LoadUsers(); err != nil {
-		fmt.Println("Error loading users:", err)
+	// Initialize database
+	if err := internal.InitDB(); err != nil {
+		fmt.Println("Error initializing database:", err)
 		return
 	}
 
@@ -27,6 +27,9 @@ func main() {
 	http.HandleFunc("/signup", internal.SignupHandler)
 	http.HandleFunc("/login", internal.LoginHandler)
 	http.HandleFunc("/update", internal.UpdateUserHandler)
+	http.HandleFunc("/weather", internal.WeatherHandler)
+	http.HandleFunc("/detect", internal.CropDetectorHandler)
+	http.HandleFunc("/calendar", internal.CalendarHandler)
 
 	fmt.Println("Server running on http://localhost:8080")
 	http.ListenAndServe(":8080", nil)
