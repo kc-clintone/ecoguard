@@ -3,10 +3,10 @@ package internal
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"os"
-	"io"
 	"strings"
 )
 
@@ -48,6 +48,11 @@ type WeatherResponse struct {
 }
 
 func WeatherHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
     apiKey := os.Getenv("OPENWEATHER_API_KEY")
     if apiKey == "" {
         http.Error(w, "OpenWeather API key not configured. Please set OPENWEATHER_API_KEY environment variable with your OpenWeatherMap API key. Get one at https://openweathermap.org/api", http.StatusInternalServerError)

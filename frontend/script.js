@@ -1,4 +1,5 @@
-const API_URL = "http://localhost:8080"; // backend API
+// Dynamic API URL - works for both local dev and production
+const API_URL = window.location.origin;
 
 let isGuest = true;
 
@@ -112,7 +113,6 @@ function fetchClimateAlerts() {
 }
 
 function displayWeather(data) {
-
   const content = document.getElementById("alerts-content");
 
   if (!data || !data.weather) {

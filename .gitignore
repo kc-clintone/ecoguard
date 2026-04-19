@@ -1,0 +1,25 @@
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+
+# Database files
+*.db
+ecoguard.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Go
+/bin
+/vendor
+*.test
+*.out
+
+# OS
+Thumbs.db

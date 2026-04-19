@@ -7,9 +7,21 @@ import (
 
 // SignupHandler handles new user signup
 func SignupHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	// Validate request body size
+	r.Body = http.MaxBytesReader(w, r.Body, 1048576) // 1MB limit
 	var newUser User
 	if err := json.NewDecoder(r.Body).Decode(&newUser); err != nil {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
+		return
+	}
+
+	// Validate input
+	if len(newUser.Username) < 3 || len(newUser.Password) < 6 {
+		http.Error(w, "Username must be 3+ chars, password 6+ chars", http.StatusBadRequest)
 		return
 	}
 
@@ -33,6 +45,11 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 
 // LoginHandler authenticates a user
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
 	var req User
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
@@ -55,6 +72,11 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 // UpdateUserHandler updates user data
 func UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
 	var updated User
 	if err := json.NewDecoder(r.Body).Decode(&updated); err != nil {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
